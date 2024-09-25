@@ -1,0 +1,44 @@
+  Objetivos 
+
+
+  General 
+
+
+  Específicos 
+
+
+  Introducción  
+
+
+  Justificación 
+
+
+  Plan de la gestión del alcance 
+
+
+  EDT 
+
+
+  Diccionario de la EDT 
+
+
+  Documento de requerimientos del producto 
+
+
+  Plan de la gestión de tiempo 
+
+
+  Listado detallado de actividades 
+
+
+  Diagrama de Gantt del proyecto (en herramienta de seguimiento de proyectos) 
+
+
+  Cronograma del proyecto 
+
+
+  Plan de la gestión de costos
+
+
+  Flujo neto de efectivo (en hoja de cálculo) 
+
