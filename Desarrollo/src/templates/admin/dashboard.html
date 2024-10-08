@@ -1,0 +1,852 @@
+{% extends './base.html' %}
+{% block title %}Gestión{% endblock %}
+{% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <h1 class="mb-4">Gestión de Elementos</h1>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="categoria-tab" data-bs-toggle="tab" data-bs-target="#categoria"
+                        type="button" role="tab" aria-controls="categoria" aria-selected="true">Categorías
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="producto-tab" data-bs-toggle="tab" data-bs-target="#producto" type="button"
+                        role="tab" aria-controls="producto" aria-selected="false">Productos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="banner-tab" data-bs-toggle="tab" data-bs-target="#banner" type="button"
+                        role="tab" aria-controls="banner" aria-selected="false">Banners
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios"
+                        type="button" role="tab" aria-controls="usuarios" aria-selected="true">Usuarios
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="categoria" role="tabpanel" aria-labelledby="categoria-tab">
+                <div class="my-3">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#categoriaModal">
+                        Añadir Categoría
+                    </button>
+                    {% with messages = get_flashed_messages() %}
+                        {% for message in messages %}
+                            <div class="alert alert-primary alert-dismissible" role="alert">
+                                <strong>{{ message }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="categoriaTabla"></tbody>
+                    {% for categoria in categorias %}
+                        <tr>
+                            <td><img src="{{ url_for('static', filename='uploads/' + categoria[3]) }}" width="100"></td>
+                            <td>{{ categoria[1] }}</td>
+                            <td>{{ categoria[2] }}</td>
+                            <td>
+                                <form action="{{ url_for('delete') }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" value="categorias" name="tabla">
+                                    <input type="hidden" value="{{ categoria[0] }}" name="id">
+                                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-warning"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editarcategoriaModal"
+                                        data-nombre="{{ categoria[1] }}"
+                                        data-estado="{{ categoria[2] }}"
+                                        data-id="{{ categoria[0] }}"
+                                        data-imagen="{{ categoria[3] }}">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <div class="modal fade" id="editarcategoriaModal" tabindex="-1"
+                             aria-labelledby="editarcategoriaModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editarcategoriaModalLabel">Añadir/Editar
+                                            Categoría</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ url_for('update_category') }}" enctype="multipart/form-data"
+                                              method="POST">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <input type="hidden" name="id" value="{{ categoria[0] }}" id="categoria-id">
+                                            <div class="mb-3">
+                                                <label for="categoria-nombre" class="form-label">Nombre</label>
+                                                <input type="text" class="form-control" id="categoria-nombre"
+                                                       name="nombre"
+                                                       required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Estado</label>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="estado"
+                                                           id="categoria-activo" value="Activo" required>
+                                                    <label class="form-check-label"
+                                                           for="categoria-activo">Activo</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="estado"
+                                                           id="categoria-inactivo" value="Inactivo">
+                                                    <label class="form-check-label"
+                                                           for="categoria-inactivo">Inactivo</label>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="categoria-imagen" class="form-label">Imagen</label>
+                                                <input type="file" class="form-control" id="imagen" name="imagen"
+                                                       accept="image/*">
+                                            </div>
+                                            <div class="text-end">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Cancelar
+                                                </button>
+                                                <button type="submit" class="btn btn-primary">Actualizar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="tab-pane fade" id="producto" role="tabpanel" aria-labelledby="producto-tab">
+                <div class="my-3">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#productoModal">
+                        Añadir Producto
+                    </button>
+                    {% with messages = get_flashed_messages() %}
+                        {% for message in messages %}
+                            <div class="alert alert-primary alert-dismissible" role="alert">
+                                <strong>{{ message }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Flores</th>
+                        <th>Categoría</th>
+                        <th>Color</th>
+                        <th>Tamaño</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="productoTabla"></tbody>
+                    {% for producto in productos %}
+                        <tr>
+                            <td><img src="{{ url_for('static', filename='uploads/' + producto[9]) }}" width="100"></td>
+                            <td>{{ producto[1] }}</td>
+                            <td>{{ producto[2] }}</td>
+                            <td>{{ producto[3] }}</td>
+                            <td>{{ producto[4] }}</td>
+                            <td>{{ producto[5] }}</td>
+                            <td>{{ producto[6] }}</td>
+                            <td>{{ producto[7] }}</td>
+                            <td>${{ '{:,.0f}'.format(producto[8]) }}</td>
+                            <td>
+                                <button type="button" class="btn btn-warning"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editproductoModal"
+                                        data-id="{{ producto[0] }}"
+                                        data-nombre="{{ producto[1] }}"
+                                        data-estado="{{ producto[2] }}"
+                                        data-flores="{{ producto[3] }}"
+                                        data-categoria="{{ producto[4] }}"
+                                        data-color="{{ producto[5] }}"
+                                        data-tamano="{{ producto[6] }}"
+                                        data-descripcion="{{ producto[7] }}"
+                                        data-precio="{{ producto[8] }}">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+
+                                <!-- Modal de Edición de Producto -->
+                                <div class="modal fade" id="editproductoModal" tabindex="-1"
+                                     aria-labelledby="editproductoModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="productoModalLabel">Añadir/Editar
+                                                    Producto</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ url_for('edit_product') }}"
+                                                      enctype="multipart/form-data" method="POST">
+                                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                    <input type="hidden" id="producto-id" name="id">
+                                                    <div class="mb-3">
+                                                        <label for="producto-nombre" class="form-label">Nombre</label>
+                                                        <input type="text" class="form-control" id="producto-nombre"
+                                                               name="producto-nombre" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label class="form-label">Estado</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="estado"
+                                                                   id="producto-activo" value="Activo" required>
+                                                            <label class="form-check-label"
+                                                                   for="producto-activo">Activo</label>
+                                                        </div>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="estado"
+                                                                   id="producto-inactivo" value="Inactivo">
+                                                            <label class="form-check-label" for="producto-inactivo">Inactivo</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="producto-imagen" class="form-label">Imagen</label>
+                                                        <input type="file" class="form-control" id="producto-imagen"
+                                                               name="imagen" accept="image/*">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="producto-flores" class="form-label">Flores</label>
+                                                        <input type="text" class="form-control" id="producto-flores"
+                                                               name="flores" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="producto-categoria"
+                                                               class="form-label">Categoría</label>
+                                                        <select class="form-select" id="producto-categoria"
+                                                                name="categoria" required>
+                                                            {% for categoria in categorias %}
+                                                                <option value="{{ categoria[1] }}">{{ categoria[1] }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="producto-color" class="form-label">Color</label>
+                                                        <input type="text" class="form-control" id="producto-color"
+                                                               name="color" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="producto-tamano" class="form-label">Tamaño
+                                                            (cm)</label>
+                                                        <input type="text" class="form-control" id="producto-tamano"
+                                                               name="tamano" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="producto-descripcion"
+                                                               class="form-label">Descripción</label>
+                                                        <textarea class="form-control" id="producto-descripcion"
+                                                                  name="descripcion" rows="3" required></textarea>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="producto-precio" class="form-label">Precio (COP
+                                                            $)</label>
+                                                        <input type="number" class="form-control" id="producto-precio"
+                                                               name="precio" step="0.01" required>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Cancelar
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <form action="{{ url_for('delete') }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" value="productos" name="tabla">
+                                    <input type="hidden" value="{{ producto[0] }}" name="id">
+                                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="tab-pane fade" id="banner" role="tabpanel" aria-labelledby="banner-tab">
+                <div class="my-3">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bannerModal">
+                        Añadir Banner
+                    </button>
+                    {% with messages = get_flashed_messages() %}
+                        {% for message in messages %}
+                            <div class="alert alert-primary alert-dismissible" role="alert">
+                                <strong>{{ message }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Primer Mensaje</th>
+                        <th>Segundo Mensaje</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="bannerTabla"></tbody>
+                    {% for banner in banners %}
+                        <tr>
+                            <td><img src="{{ url_for('static', filename='uploads/' + banner[5]) }}" width="100"></td>
+                            <td>{{ banner[1] }}</td>
+                            <td>{{ banner[2] }}</td>
+                            <td>{{ banner[3] }}</td>
+                            <td>{{ banner[4] }}</td>
+                            <td>
+                                <form action="{{ url_for('delete') }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" value="banners" name="tabla">
+                                    <input type="hidden" value="{{ banner[0] }}" name="id">
+                                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-warning"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editbannerModal"
+                                        data-id="{{ banner[0] }}"
+                                        data-nombre="{{ banner[1] }}"
+                                        data-primer-mensaje="{{ banner[2] }}"
+                                        data-segundo-mensaje="{{ banner[3] }}"
+                                        data-estado="{{ banner[4] }}">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <!-- Modal de Edición de Banner -->
+                <div class="modal fade" id="editbannerModal" tabindex="-1" aria-labelledby="editbannerModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="bannerModalLabel">Añadir/Editar Banner</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ url_for('edit_banner') }}" enctype="multipart/form-data" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" id="banner-id" name="id">
+                                    <div class="mb-3">
+                                        <label for="banner-nombre" class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="banner-nombre" name="nombre"
+                                               required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="banner-primer-mensaje" class="form-label">Primer Mensaje</label>
+                                        <input type="text" class="form-control" id="banner-primer-mensaje"
+                                               name="primer-mensaje" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="banner-segundo-mensaje" class="form-label">Segundo Mensaje</label>
+                                        <input type="text" class="form-control" id="banner-segundo-mensaje"
+                                               name="segundo-mensaje" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Estado</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="estado"
+                                                   id="banner-activo" value="Activo" required>
+                                            <label class="form-check-label" for="banner-activo">Activo</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="estado"
+                                                   id="banner-inactivo" value="Inactivo">
+                                            <label class="form-check-label" for="banner-inactivo">Inactivo</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="banner-imagen" class="form-label">Imagen</label>
+                                        <input type="file" class="form-control" id="banner-imagen" name="imagen"
+                                               accept="image/*">
+                                    </div>
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Cancelar
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
+                <div class="my-3">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#usuariosModal">
+                        Añadir Usuario
+                    </button>
+                    {% with messages = get_flashed_messages() %}
+                        {% for message in messages %}
+                            <div class="alert alert-primary alert-dismissible" role="alert">
+                                <strong>{{ message }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endwith %}
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th>Perfil</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody id="usuariosTabla"></tbody>
+                    {% for usuario in usuarios %}
+                        <tr>
+                            <td>{{ usuario[0] }}</td>
+                            <td>{{ usuario[1] }}</td>
+                            <td>{{ usuario[2] }}</td>
+                            <td>{{ usuario[3] }}</td>
+                            <td>{{ usuario[4] }}</td>
+                            <td>
+                                <form action="{{ url_for('delete') }}" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" value="user" name="tabla">
+                                    <input type="hidden" value="{{ usuario[0] }}" name="id">
+                                    <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                                <button type="button" class="btn btn-warning"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editarusuariosModal"
+                                        data-id="{{ usuario[0] }}"
+                                        data-nombre="{{ usuario[1] }}"
+                                        data-telefono="{{ usuario[2] }}"
+                                        data-email="{{ usuario[3] }}"
+                                        data-perfil="{{ usuario[4] }}">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <!-- Modal de Edición de Usuario -->
+                                <div class="modal fade" id="editarusuariosModal" tabindex="-1"
+                                     aria-labelledby="editarusuariosModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editarusuariosModalLabel">Añadir/Editar
+                                                    Usuario</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ url_for('edit_user') }}" method="POST">
+                                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                    <input type="hidden" id="banner-id" name="id"
+                                                           value="{{ usuario[0] }}">
+                                                    <div class="mb-3">
+                                                        <label for="usuario-nombre" class="form-label">Nombre</label>
+                                                        <input type="text" class="form-control" id="usuario-nombre"
+                                                               name="usuario-nombre" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="usuario-telefono"
+                                                               class="form-label">Teléfono</label>
+                                                        <input type="text" class="form-control" id="usuario-telefono"
+                                                               name="usuario-telefono" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="usuario-email" class="form-label">Email</label>
+                                                        <input type="text" class="form-control" id="usuario-email"
+                                                               name="usuario-email" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="usuario_perfil" class="form-label">Perfil</label>
+                                                        <select class="form-select" id="usuario_perfil"
+                                                                name="usuario_perfil" required>
+                                                            <option value="{{ usuario[4] }}">{{ usuario[4] }}</option>
+                                                            <option value="Visualizador">Visualizador</option>
+                                                            <option value="Administrador">Administrador</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="usuario-password"
+                                                               class="form-label">Contraseña</label>
+                                                        <input type="password" class="form-control"
+                                                               id="usuario-password" name="usuario-password" required>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Cancelar
+                                                        </button>
+                                                        <button type="submit" class="btn btn-primary">Guardar</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Categoría -->
+    <div class="modal fade" id="categoriaModal" tabindex="-1" aria-labelledby="categoriaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoriaModalLabel">Añadir/Editar Categoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('add_category') }}" enctype="multipart/form-data" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="mb-3">
+                            <label for="categoria-nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="categoria-nombre" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="estado" id="categoria-activo"
+                                       value="Activo" required>
+                                <label class="form-check-label" for="categoria-activo">Activo</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="estado" id="categoria-inactivo"
+                                       value="Inactivo">
+                                <label class="form-check-label" for="categoria-inactivo">Inactivo</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="categoria-imagen" class="form-label">Imagen</label>
+                            <input type="file" class="form-control" id="categoria-imagen" name="imagen"
+                                   accept="image/*">
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Producto -->
+    <div class="modal fade" id="productoModal" tabindex="-1" aria-labelledby="productoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productoModalLabel">Añadir/Editar Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('add_product') }}" enctype="multipart/form-data" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" id="producto-id" name="id">
+                        <div class="mb-3">
+                            <label for="producto-nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="producto-nombre" name="producto-nombre"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="estado" id="producto-activo"
+                                       value="Activo" required>
+                                <label class="form-check-label" for="producto-activo">Activo</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="estado" id="producto-inactivo"
+                                       value="Inactivo">
+                                <label class="form-check-label" for="producto-inactivo">Inactivo</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="producto-imagen" class="form-label">Imagen</label>
+                            <input type="file" class="form-control" id="producto-imagen" name="imagen" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label for="producto-flores" class="form-label">Flores</label>
+                            <input type="text" class="form-control" id="producto-flores" name="flores" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="producto-categoria" class="form-label">Categoría</label>
+                            <select class="form-select" id="producto-categoria" name="categoria" required>
+                                {% for categoria in categorias %}
+                                    <option value="{{ categoria[1] }}">{{ categoria[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="producto-color" class="form-label">Color</label>
+                            <input type="text" class="form-control" id="producto-color" name="color" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="producto-tamano" class="form-label">Tamaño (cm)</label>
+                            <input type="text" class="form-control" id="producto-tamano" name="tamano" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="producto-descripcion" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="producto-descripcion" name="descripcion" rows="3"
+                                      required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="producto-precio" class="form-label">Precio (COP $)</label>
+                            <input type="number" class="form-control" id="producto-precio" name="precio" step="0.01"
+                                   required>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Banner -->
+    <div class="modal fade" id="bannerModal" tabindex="-1" aria-labelledby="bannerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bannerModalLabel">Añadir/Editar Banner</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('add_banner') }}" enctype="multipart/form-data" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" id="banner-id" name="id">
+                        <div class="mb-3">
+                            <label for="banner-nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="banner-nombre" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="banner-nombre" class="form-label">Primer Mensaje</label>
+                            <input type="text" class="form-control" id="banner-primer-mensaje" name="primer-mensaje"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="banner-nombre" class="form-label">Segundo Mensaje</label>
+                            <input type="text" class="form-control" id="banner-segundo-mensaje" name="segundo-mensaje"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="estado" id="banner-activo"
+                                       value="Activo" required>
+                                <label class="form-check-label" for="banner-activo">Activo</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="estado" id="banner-inactivo"
+                                       value="Inactivo">
+                                <label class="form-check-label" for="banner-inactivo">Inactivo</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="banner-imagen" class="form-label">Imagen</label>
+                            <input type="file" class="form-control" id="banner-imagen" name="imagen" accept="image/*">
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de usuarios -->
+    <div class="modal fade" id="usuariosModal" tabindex="-1" aria-labelledby="usuariosModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bannerModalLabel">Añadir/Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('add_user') }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" id="banner-id" name="id">
+                        <div class="mb-3">
+                            <label for="usuario-nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="usuario-nombre" name="usuario-nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario-telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="usuario-telefono" name="usuario-telefono"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario-email" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="usuario-email" name="usuario-email"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario_perfil" class="form-label">Perfil</label>
+                            <select class="form-select" id="usuario_perfil" name="usuario_perfil" required>
+                                <option value="Visualizador">Visualizador</option>
+                                <option value="Administrador">Administrador</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario-password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="usuario-password" name="usuario-password"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usuario-confirm-password" class="form-label">Confirmar contraseña</label>
+                            <input type="password" class="form-control" id="usuario-confirm-password"
+                                   name="usuario-confirm-password"
+                                   required>
+                        </div>
+                        <div class="text-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const editarCategoriaModal = document.getElementById('editarcategoriaModal');
+        editarCategoriaModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Botón que activó el modal
+            const nombre = button.getAttribute('data-nombre');
+            const estado = button.getAttribute('data-estado');
+            const id = button.getAttribute('data-id');
+
+            const imagen = button.getAttribute('data-imagen');
+
+            // Establece los valores en el modal
+            const nombreInput = document.getElementById('categoria-nombre');
+            const estadoActivoInput = document.getElementById('categoria-activo');
+            const estadoInactivoInput = document.getElementById('categoria-inactivo');
+            const idInput = document.getElementById('categoria-id');
+
+            nombreInput.value = nombre;
+            idInput.value = id;
+
+            if (estado === 'Activo') {
+                estadoActivoInput.checked = true;
+                estadoInactivoInput.checked = false;
+            } else {
+                estadoInactivoInput.checked = true;
+                estadoActivoInput.checked = false;
+            }
+        });
+        const editarUsuariosModal = document.getElementById('editarusuariosModal');
+        editarUsuariosModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Botón que activó el modal
+            const id = button.getAttribute('data-id');
+            const nombre = button.getAttribute('data-nombre');
+            const telefono = button.getAttribute('data-telefono');
+            const email = button.getAttribute('data-email');
+            const perfil = button.getAttribute('data-perfil');
+
+            // Establece los valores en el modal
+            document.getElementById('banner-id').value = id;
+            document.getElementById('usuario-nombre').value = nombre;
+            document.getElementById('usuario-telefono').value = telefono;
+            document.getElementById('usuario-email').value = email;
+
+            // Configura el perfil
+            const perfilSelect = document.getElementById('usuario_perfil');
+            perfilSelect.value = perfil; // Establece el perfil seleccionado
+        });
+
+        const editBannerModal = document.getElementById('editbannerModal');
+        editBannerModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Botón que activó el modal
+            const id = button.getAttribute('data-id');
+            const nombre = button.getAttribute('data-nombre');
+            const primerMensaje = button.getAttribute('data-primer-mensaje');
+            const segundoMensaje = button.getAttribute('data-segundo-mensaje');
+            const estado = button.getAttribute('data-estado');
+
+            // Establece los valores en el modal
+            document.getElementById('banner-id').value = id;
+            document.getElementById('banner-nombre').value = nombre;
+            document.getElementById('banner-primer-mensaje').value = primerMensaje;
+            document.getElementById('banner-segundo-mensaje').value = segundoMensaje;
+
+            // Configura el estado
+            const estadoInputs = document.querySelectorAll('input[name="estado"]');
+            estadoInputs.forEach(input => {
+                input.checked = input.value === estado;
+            });
+        });
+        const editProductoModal = document.getElementById('editproductoModal');
+        editProductoModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Botón que activó el modal
+            const id = button.getAttribute('data-id');
+            const nombre = button.getAttribute('data-nombre');
+            const estado = button.getAttribute('data-estado');
+            const flores = button.getAttribute('data-flores');
+            const categoria = button.getAttribute('data-categoria');
+            const color = button.getAttribute('data-color');
+            const tamano = button.getAttribute('data-tamano');
+            const descripcion = button.getAttribute('data-descripcion');
+            const precio = button.getAttribute('data-precio');
+
+            // Establece los valores en el modal
+            document.getElementById('producto-id').value = id;
+            document.getElementById('producto-nombre').value = nombre;
+            document.querySelector(`input[name="estado"][value="${estado}"]`).checked = true;
+            document.getElementById('producto-flores').value = flores;
+            document.getElementById('producto-categoria').value = categoria;
+            document.getElementById('producto-color').value = color;
+            document.getElementById('producto-tamano').value = tamano;
+            document.getElementById('producto-descripcion').value = descripcion;
+            document.getElementById('producto-precio').value = precio;
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends './base.html' %}
+{% block title %}Inicio de sesión{% endblock %}
+{% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+{% block body %}
+    <div class="container login-container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 d-none d-md-block">
+                <img src="{{ url_for('static', filename='img/1000_F_539631538_WNJaPM8FJNOqoB3Jsu6Dwe2d3l65rlIi.jpg') }}"
+                     alt="Security Image" class="img-fluid">
+            </div>
+            <!-- formulario -->
+            <div class="col-md-6 login-box">
+                <div class="text-center mb-4">
+                    <h2>Decoraciones y Eventos</h2>
+                </div>
+                <h3 class="mb-4 text-center">Inicio de Sesión</h3>
+                {% with messages = get_flashed_messages() %}
+                    {% for message in messages %}
+                        <div class="alert alert-primary alert-dismissible" role="alert">
+                            <strong>{{ message }}</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endwith %}
+                <form method="POST" action="/login">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico</label>
+                        <input type="text" class="form-control" id="email" name="email"
+                               placeholder="don.juan@gmail.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" name="password"
+                                   placeholder="********">
+                            <span class="input-group-text"><i class="fa-solid fa-eye"></i></span>
+                        </div>
+                        <div class="text-end">
+                            <a href="#" class="forgot-password">Olvidé mi contraseña</a>
+                        </div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember">
+                        <label class="form-check-label" for="remember">Recuérdame</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                </form>
+                <div class="text-center mt-3">
+                    <p>¿No tienes una cuenta? <a href="{{ url_for('register') }}">¡Regístrate!</a></p>
+                </div>
+            </div>
+            <!-- formulario -->
+        </div>
+    </div>
+{% endblock %}

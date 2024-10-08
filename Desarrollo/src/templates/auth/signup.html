@@ -1,0 +1,302 @@
+{% extends './base.html' %}
+{% block title %}Registro{% endblock %}
+{% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+{% endblock %}
+{% block body %}
+    <div class="container register-container">
+        <div class="form-wrapper">
+            <!-- Imagen alineada a la izquierda -->
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='img/images (2).jpg') }}" alt="Image Registro"
+                     class="left-image w-100">
+            </div>
+            <!-- Formulario alineado a la derecha -->
+            <div class="form-container register-box">
+                <div class="text-center mb-4">
+                    <h2>Decoraciones y Eventos</h2>
+                </div>
+                <h3 class="mb-4 text-center">Registro</h3>
+                <p class="text-center">Vamos a prepararte para que puedas acceder a tu cuenta personal.</p>
+                <form action="{{ url_for('register') }}" method="POST">
+                    {% with messages = get_flashed_messages() %}
+                        {% for message in messages %}
+                            <div class="alert alert-primary alert-dismissible" role="alert">
+                                <strong>{{ message }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endwith %}
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label for="firstName" class="form-label">Nombres</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Camilo"
+                                   required>
+                        </div>
+                        <div class="col">
+                            <label for="lastName" class="form-label">Apellidos</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Ramírez"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                               placeholder="john.doe@gmail.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" name="phone" id="phone" placeholder="322 222 2222"
+                               required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <div class="input-group">
+                            <input type="password" name="password" class="form-control" id="password"
+                                   placeholder="********" required>
+                            <span class="input-group-text"><i class="bi bi-eye-slash"></i></span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                   placeholder="********"
+                                   required>
+                            <span class="input-group-text"><i class="bi bi-eye-slash"></i></span>
+                        </div>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="termsCheck" name="termsCheck" required>
+                        <label class="form-check-label" for="termsCheck">Acepto todos los <a data-bs-toggle="modal"
+                                                                                             data-bs-target="#staticBackdrop"
+                                                                                             href="#" class="terms">Términos
+                            y Políticas de Privacidad</a></label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Crear cuenta</button>
+                </form>
+                <div class="text-center mt-3">
+                    <p>¿Ya tienes una cuenta? <a href="{{ url_for('login') }}">Iniciar Sesión</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Términos y condiciones</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Consulte la Resolución "<em>Por la cual se actualiza la Política General de Seguridad y
+                        Privacidad de la Información, Seguridad Digital y Continuidad de la Operación del
+                        Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones, se definen
+                        lineamientos frente al uso y manejo de la información y se deroga la Resolución 448 de 2022</em>".
+                    </p>
+                    <p><a class="blank" href="articles-2627_Resolucion_2239_de_2024.pdf">Resolución 2239 de 2024</a></p>
+                    <h2>Políticas de Tratamiento de Datos Personales de Ministerio TIC</h2>
+                    <p>Consulte la Resolución "<em>Por la cual se establece la Política de Tratamiento de Datos
+                        Personales del Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones y se
+                        deroga la Resolución 924 de 2020</em>".</p>
+                    <p><a class="blank" href="articles-2627_Resolucion_2238_de_2024.pdf">Resolución 2238 de 2024</a></p>
+                    <h2>Condiciones de Uso</h2>
+                    <p>El contenido de este sitio web está sujeto a las condiciones aquí expuestas. Las personas (en
+                        adelante Ciudadanos-Usuarios) al acceder, navegar o usar este sitio, reconocen que han leído,
+                        entendido y se obligan a cumplir con estos términos, leyes y reglamentos. Si el
+                        Ciudadano-Usuario no está de acuerdo con la presente política de privacidad, le sugerimos
+                        abstenerse de utilizar este sitio web.</p>
+                    <h3>1. ACEPTACIÓN DE LOS TÉRMINOS</h3>
+                    <p>La prestación del servicio del sitio Web del Ministerio TIC (mintic.gov.co) es de carácter libre
+                        y gratuito para los usuarios y se rige por los términos y condiciones que se incluyen a
+                        continuación, los cuales se entienden como conocidos y aceptados por los Ciudadanos-Usuarios del
+                        sitio. El uso de los datos personales del usuario se encuentra sujetos a la Política de
+                        Protección de Datos personales del Ministerio/Fondo Único de Tecnologías de la Información y las
+                        Comunicaciones.</p>
+                    <p>El Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones se reserva el
+                        derecho de revisar y modificar de manera unilateral estos términos y condiciones de uso o la
+                        información contenida en el sitio web en cualquier momento sin aviso previo, mediante la
+                        actualización de este anuncio. También puede realizar mejoras o cambios en los servicios
+                        descritos en este sitio web en cualquier momento y sin previo aviso.</p>
+                    <p>La información contenida en este sitio es pública en los términos señalados en la Ley 1712 de
+                        2014. Por tanto, toda la información que se publique puede ser accedida por cualquier persona
+                        que la requiera.</p>
+                    <p>El Ministerio TIC (mintic.gov.co) no persigue ningún lucro, ganancia o interés comercial con los
+                        contenidos o links que se publican en su sitio web y en las páginas web de otras dependencias o
+                        entidades adscritas y vinculadas, a los cuales se accede a través del sitio web, por tal motivo
+                        se le solicita al usuario de este sitio, que lea detallada y juiciosamente estas condiciones de
+                        uso y la Política de Seguridad y Privacidad de la Información ingresando al sitio web en la
+                        sección de Transparencia y acceso a Información Pública donde se encuentra publicada la Política
+                        de Seguridad y Privacidad de la Información.</p>
+                    <h3>1.1. USO DEL SITIO WEB POR PARTE DE LOS MENORES DE EDAD</h3>
+                    <p>Los menores de 18 años o incapaces no deberán ingresar ni utilizar los servicios que prestan las
+                        páginas sin el previo consentimiento de sus padres, tutores o curadores. Los usuarios menores de
+                        18 años o incapaces no podrán registrarse por su propia cuenta para acceder a los servicios que
+                        presta el sitio web, sino únicamente con el consentimiento de sus padres, tutores o curadores,
+                        según el caso.</p>
+                    <p>El Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones manifiestan,
+                        conforme a las disposiciones del Código del Menor o de las leyes aplicables, que el objeto de
+                        las páginas no es atentar contra la moral, la salud física, ni mental de los menores de edad o
+                        incapaces, u obtener información confidencial e íntima del usuario con el propósito de usarla en
+                        su contra. Los padres, tutores o curadores del usuario menor de edad o incapaz son responsables
+                        totalmente por la utilización que el usuario menor de edad o incapaz haga de la plataforma.</p>
+                    <h3>2. DERECHOS DE PROPIEDAD INTELECTUAL</h3>
+                    <p>El Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones es titular de
+                        todos los derechos sobre el software de este sitio web, así como de los derechos de propiedad
+                        industrial e intelectual referidos a los contenidos que en ella se incluyan, además se reserva
+                        todos los derechos de autor, incluidos los no mencionados en este documento.</p>
+                    <p>La propiedad intelectual sobre los contenidos del sitio web (textos, gráficos, logos,
+                        animaciones, sonidos y bases de datos, entre otros) o bien hacen parte del patrimonio del
+                        Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones o, en su caso, su
+                        titularidad es de terceros que autorizaron el uso de estos en el sitio web o es información
+                        pública que se rige por las leyes de acceso a la información pública colombianas. Los textos y
+                        elementos gráficos que constituyen el sitio web, así como su presentación y montaje son
+                        titularidad exclusiva de El Ministerio/Fondo Único de Tecnologías de la Información y las
+                        Comunicaciones y ésta ostenta los derechos de explotación necesarios.</p>
+                    <p>Algunos de los materiales de este sitio web pueden estar protegidos por derechos de autor cuando
+                        así sea mencionado en el contenido. Por tanto, cualquier uso no autorizado, así como el
+                        incumplimiento de los términos, condiciones o avisos contenidos en ella, puede violar la
+                        normatividad nacional vigente al respecto.</p>
+                    <p>En todo caso, el Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones al
+                        hacer uso de estas imágenes hará referencia a las fuentes oficiales de las mismas.</p>
+                    <h3>3. INFORMACIÓN Y SITIOS WEB DE TERCEROS</h3>
+                    <p>Ministerio TIC (mintic.gov.co) puede contener enlaces o acceso a sitios web y contenidos de otras
+                        personas o entidades, pero no se hace responsable de su contenido, no controla, refrenda ni
+                        garantiza el contenido incluido en dichos sitios, tampoco se responsabiliza del funcionamiento o
+                        accesibilidad de las páginas web vinculadas; ni sugiere, invita o recomienda la visita a las
+                        mismas, por lo que tampoco será responsable del resultado obtenido, incluidos los cambios o
+                        actualizaciones realizados en el sitio enlazado o la exactitud o integridad de la información
+                        que se proporciona allí.</p>
+                    <p>En consecuencia, los Ciudadanos-Usuarios aceptan que el Ministerio/Fondo Único de Tecnologías de
+                        la Información y las Comunicaciones no es responsable de ningún contenido, enlace asociado,
+                        recurso o servicio asociado al sitio de un tercero, ni será responsable de ninguna pérdida o
+                        daño de cualquier tipo que se derive del uso que se realice de los contenidos de terceros.</p>
+                    <p>El Ministerio TIC (mintic.gov.co) proporciona los enlaces para su conveniencia y la existencia de
+                        estos en nuestros sitios web no implica que el Ministerio/Fondo de Tecnologías de la Información
+                        y las Comunicaciones apruebe o mantenga relaciones contractuales vigentes con las organizaciones
+                        o compañías a la que se enlaza, o a sus productos o servicios y viceversa para las
+                        organizaciones o compañías que se enlacen al sitio web.</p>
+                    <h3>4. AVISO LEGAL</h3>
+                    <p>El Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones, se reserva el
+                        derecho de modificar, complementar o suspender total o parcialmente la aplicación y el contenido
+                        que se genere por el uso de la aplicación. Adicionalmente se reserva el derecho de cambiar los
+                        términos y condiciones de uso en cualquier momento, con vigencia inmediata a partir del momento
+                        que se actualiza la aplicación. Se considerará que los Ciudadanos-Usuario han leído y aceptado
+                        los términos y condiciones de uso para usar, acceder, descargar, instalar, obtener o brindar
+                        información hacia la aplicación por tal motivo el Ciudadano - Usuario declara que es consciente
+                        de que el contenido insertado en las aplicaciones es de exclusiva responsabilidad de cada una de
+                        las entidades que lo publican. El uso que el Ciudadano-Usuario haga del sitio web queda bajo su
+                        única responsabilidad y se rechaza toda responsabilidad por la disponibilidad, oportunidad,
+                        seguridad y calidad de la aplicación o aplicación relacionada u otros productos, servicios e
+                        información obtenidos a través del sitio. No somos responsables de la precisión o la fiabilidad
+                        de cualquier información o consejo transmitido a través de este. Los sitios vinculados por
+                        enlace a la aplicación no están sometidos al control del Ministerio/Fondo Único de Tecnologías
+                        de la Información y las Comunicaciones, por lo que ésta no se responsabiliza del contenido de
+                        sitios vinculados ni de enlaces incluidos en el sitio</p>
+                    <h3>5. DEBERES Y PROHIBICIONES DE LOS CIUDADANOS - USUARIOS</h3>
+                    <p>El Ciudadano-Usuario se obliga a no introducir en el sitio, información de carácter ofensivo o
+                        agraviante o que contenga amenazas, u otros programas perjudiciales o mecanismos para captar o
+                        distorsionar información contenida en la aplicación. Además, no podrá cargar, publicar, enviar
+                        mensaje de correo electrónico, transmitir o de otro modo proporcionar contenido ilícito, nocivo,
+                        abusivo, hostil, difamatorio, discriminatorio, vulgar e injurioso, o cargar contenidos que
+                        puedan generar dificultades en la operación del sistema de este sitio web. El Usuario -
+                        ciudadano se abstendrá de realizar declaraciones falsas o de otro modo erróneas de su
+                        vinculación con una persona física o jurídica o almacenar datos personales.</p>
+                    <h3>6. AVISO DE PRIVACIDAD</h3>
+                    <p>De conformidad con lo establecido en el artículo 15 de la Constitución Política de Colombia y los
+                        deberes contenidos en la Ley 1581 de 2012 o las normas que las modifiquen, deroguen o subroguen,
+                        el Ministerio TIC (mintic.gov.co), adopta la política de tratamiento de datos personales del
+                        Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones, con el objeto de
+                        proteger la privacidad de la información personal que obtenga o llegare a obtener a través de
+                        este, al igual que preservar la confidencialidad, seguridad, veracidad, transparencia, acceso y
+                        circulación restringida de esta información que reposa en sus bases de datos.</p>
+                    <p>Al utilizar los servicios del Ministerio TIC (mintic.gov.co), el Ciudadano- Usuario reconoce y
+                        acepta que este sitio puede acceder a la información de su cuenta, y preservarla, así como
+                        divulgar cualquier contenido asociado a dicha cuenta, si fuese necesario por razones legales, o
+                        bien si se considera de buena fe que el acceso, la conservación o la divulgación de dichos datos
+                        es razonablemente necesario para: (a) cumplir con leyes, regulaciones, procesos legales o
+                        solicitudes gubernamentales exigibles, (b) aplicar las Condiciones, incluida la investigación de
+                        posibles infracciones de las mismas, (c) detectar, prevenir o de cualquier modo abordar casos o
+                        situaciones de fraude, seguridad o cuestiones técnicas (incluyendo, sin limitarse a ello, el
+                        filtro de spam) o (d) proteger contra todo daño inminente los derechos, propiedad o seguridad
+                        del Ministerio/Fondo de Tecnologías de la Información y las Comunicaciones, sus usuarios y el
+                        público en la manera prevista o permitida por la ley.</p>
+                    <p>El Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones informa al
+                        Ciudadano-Usuario que la información solicitada y otorgada de manera libre y voluntaria por este
+                        tiene como finalidad llevar el registro de participación ciudadana, el futuro envío de
+                        información relacionada con el Ministerio TIC (mintic.gov.co) y; enviar notificaciones de
+                        actualización de este de acuerdo con los intereses indicados por el usuario al momento de
+                        registrarse.</p>
+                    <p>El Ministerio/Fondo de Tecnologías de la Información y las Comunicaciones, se reserva el derecho
+                        de modificar las políticas de Confidencialidad y Protección de Datos que a continuación se
+                        detallan a fin de adaptarlas a nuevos requerimientos legislativos, jurisprudenciales, técnicos o
+                        todos aquellos que le permitan brindar mejores y más oportunos servicios y contenidos
+                        informativos, por lo cual se aconseja revisar estas normas periódicamente.</p>
+                    <p>Igualmente, se reserva el derecho a rechazar la admisión, publicación o transmisión de cualquier
+                        contenido a su discreción.</p>
+                    <p>Para conocer más sobre la política de tratamiento de datos personales, lo invitamos a ingresar al
+                        sitio web en la sección de Transparencia y Acceso a Información Pública donde se encuentra
+                        publicada la información vigente.</p>
+                    <h3>7. POLÍTICA DE SEGURIDAD Y PROTECCIÓN DE DATOS</h3>
+                    <p>El Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones a través del
+                        Ministerio TIC (mintic.gov.co) recopilara la información conforme a lo señalado por la Ley 1712
+                        de 2014 en lo relacionado con información reservada y clasificada. Es posible que la información
+                        que recopilamos en nuestro sitio web (por ejemplo: el nombre del dominio, las búsquedas
+                        realizadas, las páginas visitadas y la duración de la sesión del usuario) se combinen para
+                        analizar estadísticamente el tráfico y nivel de utilización del sitio web. Esta información se
+                        recopila para mejorar el rendimiento de nuestras plataformas.</p>
+                    <p>En aquellos casos en los cuales el Ciudadano-Usuario publique libre y voluntariamente en el sitio
+                        web cualquier información adicional a la solicitada que tenga el carácter de clasificada, se
+                        entenderá que ha consentido la revelación de esta en los términos señalados en el artículo 18 de
+                        la Ley 1712 de 2014. En el mismo sentido, si la información que sea publicada por la entidad es
+                        sujeta a reserva o clasificada, los usuarios deberán hacer las reclamaciones respectivas ante el
+                        Ministerio en los términos señalados en la Ley 1712 de 2014.</p>
+                    <p>Este Ministerio TIC (mintic.gov.co) utiliza cookies para preservar la información de sesión y
+                        guardar las características del navegador. Las cookies no se utilizan para acceder a información
+                        personal ni para controlar sus acciones. Las cookies utilizadas por el Ministerio TIC
+                        (mintic.gov.co) son ficheros enviados a un navegador por medio de un servidor web para registrar
+                        las actividades del usuario en la página y permitirle una navegación más fluida y personalizada.
+                        El usuario tiene la posibilidad de configurar su navegador para impedir la entrada de éstas,
+                        bloquearlas o, en su caso, eliminarlas. Para utilizar este sitio Web, no resulta necesario que
+                        el usuario permita la descarga o instalación de cookies.</p>
+                    <h3>7.1 POLÍTICA DE SEGURIDAD DE LA INFORMACIÓN</h3>
+                    <p>El Ministerio TIC (mintic.gov.co) cuenta con medidas de seguridad de la información en los
+                        procesos, trámites, servicios, sistemas de información y su infraestructura permitiendo
+                        preservar la confidencialidad, integridad, disponibilidad y privacidad de los datos y la
+                        información que se administran en este, y en cumplimiento del marco jurídico correspondiente,
+                        con el objetivo de proporcionar una experiencia confiable, mediante un servicio seguro.</p>
+                    <p>En el Ministerio TIC (mintic.gov.co) comprobamos y ponemos a prueba todas las etapas del ciclo de
+                        vida del desarrollo de este (Desarrollo, Pruebas, Producción) y realizamos evaluación constante
+                        del mismo, en cumplimiento de la Estrategia de Gobierno Digital (Decreto 1008 del 2018) y la
+                        Política Nacional de Seguridad Digital (CONPES 3854) con el objetivo de analizar los riesgos de
+                        seguridad digital a los cuales se encuentra expuesto el sitio web y lograr su adecuada
+                        mitigación</p>
+                    <p>No nos hacemos responsables por cualquier falla en las medidas de seguridad cuando dicho
+                        incumplimiento se deba a circunstancias fuera de nuestro control, caso fortuito o fuerza
+                        mayor.</p>
+                    <p>El Ministerio/Fondo Único de Tecnologías de la Información y las Comunicaciones a través del
+                        Ministerio TIC (mintic.gov.co), se compromete a adoptar una política de confidencialidad y
+                        protección de datos, con el objeto de proteger la privacidad de la información personal obtenida
+                        a través de su sitio web.</p>
+                    <h3>8. LEY Y JURISDICCIÓN APLICABLE</h3>
+                    <p>Las condiciones generales que regulan el uso del Ministerio TIC (mintic.gov.co) se rigen por las
+                        leyes de la República de Colombia.</p>
+                    <p>Cualquier disputa o conflicto que se genere entre el Usuario y el Ministerio/Fondo Único de
+                        Tecnologías de la Información y las Comunicaciones, por el ingreso y/o uso del sitio y de los
+                        servicios que allí se prestan, se llevará ante los jueces de la República de Colombia y será
+                        resuelto de acuerdo con las leyes de la República de Colombia sin tener efecto el conflicto con
+                        otras leyes de otros países o su estado de residencia actual.</p>
+                    <p>Para cualquier efecto legal o judicial, el lugar de las presentes condiciones es la ciudad de
+                        Bogotá, República de Colombia, y cualquier controversia que surja de su interpretación o
+                        aplicación se someterá a los jueces de la República de Colombia.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

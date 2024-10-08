@@ -1,0 +1,45 @@
+{% extends './base.html' %}
+{% block title %}Contáctanos{% endblock %}
+{% block customCSS %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+{% endblock %}
+{% block body %}
+    <!-- Contenedor -->
+    <div class="container py-5">
+        <div class="contact-form p-5">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>Contáctanos</h2>
+                    <p>¡Estamos para ti!</p>
+                    <!--Formularios-->
+                    <form>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="nombre" placeholder="Nombre">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="apellido" placeholder="Apellido">
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="comentarios" rows="5"
+                                      placeholder="Coméntanos lo que quieras"></textarea>
+                        </div>
+                        <a href="{{ url_for('home') }}" class="btn btn-primary w-100">Enviar</a>
+                    </form>
+                </div>
+                <!-- Datos de contacto -->
+                <div class="col-md-6">
+                    <div class="contact-info mb-4">
+                        <p><i class="fa-solid fa-location-dot"></i> Bogotá, Colombia</p>
+                        <p><i class="fa-solid fa-phone"></i> 325 255 8501</p>
+                        <p><i class="fa-solid fa-envelope"></i> abcd123@gmail.com</p>
+                    </div>
+                    <div class="illustration">
+                        <img alt="Illustration" class="img-fluid"
+                             src="{{ url_for('static', filename='img/116253696_685395055374601_7657996227304451166_n.jpg') }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

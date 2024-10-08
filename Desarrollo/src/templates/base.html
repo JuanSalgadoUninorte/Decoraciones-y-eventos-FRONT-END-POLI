@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/c883f11077.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <style>a {
+        text-decoration: none;
+    }</style>
+    {% block customCSS %}{% endblock %}
+</head>
+<body>
+<!--Nav-->
+<!-- Navbar -->
+{% if current_user.is_authenticated %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}">Decoraciones y Eventos</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                {% if current_user.perfil == 'Administrador' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Panel Admin</a>
+                    </li>
+                {% endif %}
+            </ul>
+            <div class="d-flex">
+                <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar
+                    sesión, {{ current_user.fullname }}</a>
+            </div>
+        </div>
+    </div>
+</nav>
+{% endif %}
+<!--nav-->
+{% block body %}
+{% endblock %}
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Decoraciones y Eventos</h5>
+                <p>Contáctanos</p>
+                <p><i class="bi bi-telephone"></i> +57 3004567890</p>
+                <p><i class="bi bi-envelope"></i> info@decoracionesyeventos.com</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Categorías</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ url_for('home') }}#weddingCarousel" class="text-white">Bodas</a></li>
+                    <li><a href="{{ url_for('home') }}#weddingCarousel" class="text-white">Cumpleaños</a></li>
+                    <li><a href="{{ url_for('home') }}#weddingCarousel" class="text-white">Recepciones</a></li>
+                    <li><a href="{{ url_for('home') }}#weddingCarousel" class="text-white">Aniversarios</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Coméntanos</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ url_for('comment_above_us') }}" class="text-white">Coméntanos sobre tu
+                        experiencia</a></li>
+                    <li><a href="{{ url_for('contact_us') }}" class="text-white">¿Necesitas asesoría?</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+</html>
